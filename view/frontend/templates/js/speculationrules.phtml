@@ -1,0 +1,206 @@
+<?php
+
+declare(strict_types=1);
+
+use Basecom\SpeculationRulesToolbox\Model\Config;
+use Basecom\SpeculationRulesToolbox\ViewModel\SpeculationRules;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @phpcs:disable Generic.Files.LineLength.TooLong
+ */
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Config $speculationRules */
+$speculationRules = $viewModels->require(SpeculationRules::class);
+
+$bannedTerms = $speculationRules->getSpeculationRulesBannedTerms();
+$moderatePreloadingEnabled = $speculationRules->isSpeculationRulesModerateEnabled();
+$preloadType = $speculationRules->getSpeculationRulesPreloadType();
+?>
+
+<script data-speculation-type="speculation-rules-logic">
+    'use strict';
+<?php
+    /**
+     * Wrap the entire SpeculationRules object into an IIFE to keep the global scope tidy
+     */
+?>
+    (function( SpeculationRules, undefined ) {
+        SpeculationRules.bannedTerms = '<?= $escaper->escapeJs($bannedTerms) ?>';
+
+        SpeculationRules.urlContainsBannedTerms = (url) => {
+            const bannedRegex = new RegExp(SpeculationRules.bannedTerms, 'i');
+            return bannedRegex.test(url);
+        }
+
+        SpeculationRules.getConcurrentPreloadsForActiveDeviceType = (concurrentPreloadsArray) => {
+            return concurrentPreloadsArray[SpeculationRules.getDeviceType()];
+        }
+
+        const processHrefsFromAnchorElements = (links, concurrentPreloadsArray, preloadType) => {
+            if(!links.length >= 1) return [];
+
+            let urls =  Array.from(links.map(link => link.href.trim()));
+
+            let allowedUrls = filterUniqueAndAllowedUrls(urls, preloadType);
+
+            const concurrentPreloads = SpeculationRules.getConcurrentPreloadsForActiveDeviceType(concurrentPreloadsArray);
+            return allowedUrls.slice(0,concurrentPreloads);
+        }
+
+        const getAllowedUrlsFromSelector = (selector, concurrentPreloadsArray, preloadType) => {
+            const selectedElements = document.querySelectorAll(selector);
+
+            // Check if every selected element is an <a> element
+            const onlyHrefs = Array.from(selectedElements).every(el => el.tagName === 'A');
+
+            if (onlyHrefs && selectedElements.length >= 1){
+                return processHrefsFromAnchorElements(selectedElements, concurrentPreloadsArray, preloadType);
+            }
+
+            // Get the first matching element for the selector
+            const targetElement = document.querySelector(selector);
+
+            // No matching element found
+            if (!targetElement) return [];
+
+            return processHrefsFromAnchorElements(
+                Array.from(targetElement.querySelectorAll("a")), concurrentPreloadsArray, preloadType
+            );
+        };
+
+        SpeculationRules.getDeviceType = () => {
+            return /iphone|ipod|android.*mobile|windows phone|ipad|android(?!.*mobile)|tablet/i.test(
+                navigator.userAgent.toLowerCase()
+            ) ? "mobile" : "desktop";
+        }
+
+        SpeculationRules.deviceSupportsSpeculationRules = () => {
+            return (HTMLScriptElement.supports &&
+                HTMLScriptElement.supports("speculationrules"));
+        }
+
+        const filterUniqueAndAllowedUrls = (urls, preloadType) => {
+            return Array.from(new Set(
+                urls
+                    // Remove empty hrefs
+                    .filter(href => href !== '')
+                    // Remove URL fragment for prefetching
+                    .map(href => preloadType === "prefetch" ? href.split("#")[0] : href)
+                    // Check for banned terms
+                    .filter(href => !SpeculationRules.urlContainsBannedTerms(href))
+            ));
+        }
+
+        SpeculationRules.addCustomLinksArrayScript = (linksArray, preloadType) => {
+            const urls = filterUniqueAndAllowedUrls(linksArray, preloadType);
+            SpeculationRules.prepareSpeculationScriptWithUrls(urls, preloadType, "immediate","custom-urls");
+        }
+
+        SpeculationRules.addDynamicLinkScript = (targetIdentifier, concurrentPreloadsArray, preloadType) => {
+            let urls = getAllowedUrlsFromSelector(targetIdentifier, concurrentPreloadsArray, preloadType);
+
+            if (!urls.length >= 1) return;
+
+            SpeculationRules.prepareSpeculationScriptWithUrls(urls, preloadType, "immediate","dynamic-urls");
+        }
+
+<?php
+        /**
+         * Prepares the structure for the speculation rules script.
+         *
+         * Used for:
+         * - custom urls
+         * - dynamic targets
+         * - dynamic intersections
+         */
+?>
+        SpeculationRules.prepareSpeculationScriptWithUrls = (urls, preloadType, eagerness,dataPreloadType) => {
+            urls = Array.isArray(urls) ? urls : [urls];
+
+            if(!urls.length >= 1) return;
+
+            return SpeculationRules.addSpeculationRuleScript({
+                [preloadType]: [
+                    {
+                        "urls": urls,
+                        "eagerness": eagerness
+                    }
+                ]
+            }, dataPreloadType);
+        }
+
+<?php
+        /**
+         * Adds the only speculation rule script with "moderate" eagerness, where link preloads will be triggered upon
+         * hovering.
+         *
+         * Based on the sample provided in the
+         * [documentation](https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API#concepts_and_usage).
+         */
+?>
+        <?php if ($moderatePreloadingEnabled): ?>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!SpeculationRules.deviceSupportsSpeculationRules()) {
+                console.log('Your device does not support speculation rules');
+                return;
+            }
+            addModeratePreloadingScript();
+        });
+        <?php endif; ?>
+
+        const addModeratePreloadingScript = () => {
+            const speculationRules = {
+                "<?= $escaper->escapeJs($preloadType) ?>": [
+                    {
+                        "where": {
+                            "and": [
+                                {"href_matches": "/*"},
+                                {"not": {"href_matches": ".*(" + SpeculationRules.bannedTerms + ").*"}},
+                                {"not": {"href_matches": "/*\\?*(^|&)add-to-cart=*"}},
+                                {"not": {"selector_matches": ".no-prerender"}},
+                                {"not": {"selector_matches": ".do-not-prerender"}},
+                                {"not": { "selector_matches": "[download]"}},
+                                {"not": {"selector_matches": "[rel~=nofollow]"}}
+                            ]
+                        },
+                        "eagerness": "moderate"
+                    }
+                ]
+            };
+
+            SpeculationRules.addSpeculationRuleScript(speculationRules, "moderate-preloads");
+        }
+
+<?php
+        /**
+         * Takes a json object and adds it to the dom as a speculation rules script.
+         *
+         * The `dataPreloadType` is simply used to identify the rendered scripts in the resulting HTMl.
+         * The return value is used in the `dynamic-intersections.phtml` to keep track of the added scripts.
+         */
+?>
+        SpeculationRules.addSpeculationRuleScript = (scriptContent, dataSpeculationType) => {
+            const speculationRuleScript = document.createElement('script');
+            speculationRuleScript.type = 'speculationrules';
+            speculationRuleScript.dataset.speculationType = dataSpeculationType;
+
+            speculationRuleScript.textContent = JSON.stringify(scriptContent);
+            document.body.append(speculationRuleScript);
+            return speculationRuleScript;
+        }
+    }( window.SpeculationRules = window.SpeculationRules || {} ));
+
+</script>
+
+<?= /** @noEscape */ $block->getChildHtml('speculationrules.all_pages') ?>
+<?= /** @noEscape */ $block->getChildHtml('speculationrules.plp') ?>
+<?= /** @noEscape */ $block->getChildHtml('speculationrules.pdp') ?>
+<?= /** @noEscape */ $block->getChildHtml('speculationrules.homepage') ?>
+<?= /** @noEscape */ $block->getChildHtml('speculationrules.dynamic_intersections') ?>

@@ -1,0 +1,142 @@
+<?php
+
+declare(strict_types=1);
+
+use Basecom\SpeculationRulesToolbox\Model\Config;
+use Basecom\SpeculationRulesToolbox\ViewModel\SpeculationRules;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$speculationRules = $viewModels->require(SpeculationRules::class);
+
+/** @var SpeculationRules $speculationRules */
+if (!$speculationRules->canApplyDynamicRules()) {
+    // Early return, if dynamic intersections are disabled for the current page
+    return;
+}
+
+/** @var Config $speculationRules */
+$preloadType = $speculationRules->getDynamicIntersectionsPreloadType();
+
+$concurrentPreloads = $speculationRules->getDynamicIntersectionsConcurrentPreloads();
+$observerDelay = $speculationRules->getDynamicIntersectionsObserverDelay();
+$observerThreshold = $speculationRules->getDynamicIntersectionsObserverThreshold();
+?>
+
+<script data-speculation-type="dynamic-intersections-logic">
+    'use strict';
+    (function() {
+<?php
+        /**
+         * - `observerDebounceTimeouts` stores the timeout for each image that comes into view
+         * - `maximumConcurrentPreloads` is initialized with the config value,
+         *    based on the current device (desktop /mobile)
+         * - `loadedScripts` stores the created scripts in the DOM with their respective URL, to ensure uniqueness
+         */
+?>
+        let observerDebounceTimeouts = {};
+        let maximumConcurrentPreloads = 0;
+        const loadedScripts = new Map();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Only add observer if speculation rules are supported
+            if (!SpeculationRules.deviceSupportsSpeculationRules()) {
+                console.log('Your device does not support speculation rules');
+                return;
+            }
+            maximumConcurrentPreloads = SpeculationRules.getConcurrentPreloadsForActiveDeviceType(
+                <?= /** @noEscape */ json_encode($concurrentPreloads) ?>
+            );
+            initializeImageIntersectionObserver();
+        });
+
+<?php
+        /**
+         * Add an intersection observer that observes images inside a-elements.
+         * When an intersection is detected (based on `$observerThreshold` and `$observerDelay`), the closest a-element
+         * is extracted and the associated href is evaluated.
+         */
+?>
+        const initializeImageIntersectionObserver = () => {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    const img = entry.target;
+
+                    // Clear the previous timeout if the image leaves the view
+                    if (observerDebounceTimeouts[img.src]) {
+                        clearTimeout(observerDebounceTimeouts[img.src]);
+                    }
+
+                    const link = img.closest("a");
+                    if (!link || !link?.href) return;
+
+                    let url = link.href;
+                    if(SpeculationRules.urlContainsBannedTerms(url)) return;
+
+                    <?php /** Remove URL-Fragment when prefetching, to avoid duplications */ ?>
+                    if("<?= $escaper->escapeJs($preloadType) ?>" === "prefetch"){
+                        url = url.split("#")[0];
+                    }
+
+                    handleImageIntersection(entry, img, url);
+                });
+            }, { threshold: <?= $escaper->escapeJs($observerThreshold) ?> });
+
+            document.querySelectorAll("a img").forEach(img => imageObserver.observe(img));
+        }
+
+        const handleImageIntersection = (entry, img, url) => {
+            if (entry.isIntersecting) {
+                observerDebounceTimeouts[img.src] = setTimeout(() => {
+                    if (entry.isIntersecting) {
+                        updateLoadedScriptsMap(url);
+                    }
+                }, <?= $escaper->escapeJs($observerDelay) ?>);
+            } else {
+                delete observerDebounceTimeouts[img.src];
+            }
+        }
+
+<?php
+        /**
+         * Adds a new script to the loaded Scripts map, if the associated URL is not already present.
+         * If the map exceeds its maximum allowed size, remove the oldest entry from the map and from the DOM.
+         */
+?>
+        const updateLoadedScriptsMap = (url) => {
+            if (loadedScripts.has(url)) {
+                return;
+            }
+
+            // If exceeding limit, remove the oldest script
+            if (loadedScripts.size >= maximumConcurrentPreloads) {
+                // Get the first-added URL (oldest entry)
+                const oldestUrl = loadedScripts.keys().next().value;
+                const oldestScript = loadedScripts.get(oldestUrl);
+
+                if (oldestScript) {
+                    oldestScript.remove();
+                    loadedScripts.delete(oldestUrl);
+                }
+            }
+
+            let speculationRuleScript = SpeculationRules.prepareSpeculationScriptWithUrls(
+                [url],
+                "<?= $escaper->escapeJs($preloadType) ?>",
+                "immediate",
+                "dynamic-intersections"
+            )
+
+            if(!speculationRuleScript) return;
+
+            loadedScripts.set(url, speculationRuleScript);
+        };
+    })();
+</script>
+
+

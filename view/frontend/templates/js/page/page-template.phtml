@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+use Basecom\SpeculationRulesToolbox\Model\Config;
+use Basecom\SpeculationRulesToolbox\ViewModel\SpeculationRules;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var SpeculationRules $speculationRules */
+/** @var Config $speculationRules */
+
+$speculationRules = $viewModels->require(SpeculationRules::class);
+
+$customLinksEnabled = $block->getData('customLinksEnabled');
+$dynamicTargetsEnabled = $block->getData('dynamicTargetsEnabled');
+$customScriptEnabled = $block->getData('customScriptEnabled');
+
+// Custom Links
+/** @var string $preloadTypeCustom */
+$preloadTypeCustom = $block->getData('preloadTypeCustom');
+/** @var array $customLinksArray */
+$customLinksArray = $block->getData('customLinksArray');
+
+// Dynamic Links
+/** @var string $preloadTypeDynamic */
+$preloadTypeDynamic = $block->getData('preloadTypeDynamic');
+/** @var string $cssSelector */
+$cssSelector = $block->getData('cssSelector');
+/** @var array $concurrentPreloads */
+$concurrentPreloads = $block->getData('concurrentPreloads');
+
+// Custom Script
+/** @var string $customScript */
+$customScript = $block->getData('customScript');
+?>
+
+<script>
+    'use strict';
+    document.addEventListener("DOMContentLoaded", () => {
+        if (!SpeculationRules.deviceSupportsSpeculationRules()) {
+            console.log('Your device does not support speculation rules');
+            return;
+        }
+
+        <?php if ($customLinksEnabled && !empty($customLinksArray)): ?>
+            SpeculationRules.addCustomLinksArrayScript(
+                <?= /** @noEscape */ json_encode($customLinksArray) ?>,
+                "<?= $escaper->escapeJs($preloadTypeCustom) ?>"
+            );
+        <?php endif; ?>
+
+        <?php if ($dynamicTargetsEnabled && $cssSelector): ?>
+            SpeculationRules.addDynamicLinkScript(
+                '<?= $escaper->escapeJs($cssSelector) ?>',
+                <?= /** @noEscape */ json_encode($concurrentPreloads) ?>,
+                "<?= $escaper->escapeJs($preloadTypeDynamic) ?>"
+            );
+        <?php endif; ?>
+
+        <?php if ($customScript): ?>
+            SpeculationRules.addSpeculationRuleScript(<?= /** @noEscape */ $customScript ?>, "custom-script");
+        <?php endif; ?>
+    });
+</script>
+

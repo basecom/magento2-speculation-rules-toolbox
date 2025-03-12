@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+use Basecom\SpeculationRulesToolbox\Model\Config;
+use Basecom\SpeculationRulesToolbox\ViewModel\SpeculationRules;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var SpeculationRules $speculationRules */
+
+$speculationRules = $viewModels->require(SpeculationRules::class);
+
+/** @var Config $speculationRules */
+$customLinksEnabled = $speculationRules->isAllPagesCustomLinksEnabled();
+$customScriptEnabled = $speculationRules->isAllPagesCustomScriptEnabled();
+
+if (!$customLinksEnabled && !$customScriptEnabled) {
+    // Early return if no relevant settings are enabled
+    return;
+}
+
+$preloadTypeCustom = $speculationRules->getAllPagesPreloadTypeCustom();
+$customLinksArray = $speculationRules->getAllPagesCustomLinks();
+// The script is already valid json at this point and does not need to be encoded again
+$customScript = $speculationRules->getAllPagesCustomScript();
+?>
+
+<?= /** @noEscape */ $block->getChildBlock('speculationrules.all_pages.script')
+    ->setData('customLinksEnabled', $customLinksEnabled)
+    ->setData('preloadTypeCustom', $preloadTypeCustom)
+    ->setData('customLinksArray', $customLinksArray)
+    ->setData('customLinksArray', $customLinksArray)
+    ->setData('customScriptEnabled', $customScriptEnabled)
+    ->setData('customScript', $customScript)
+    ->toHtml();
+?>

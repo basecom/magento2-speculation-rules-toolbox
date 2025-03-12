@@ -1,0 +1,34 @@
+{
+    "name": "basecom/magento2-speculation-rules-toolbox",
+    "version": "0.9.0",
+    "description": "Magento2 module to provide extensive functionality for speculation rules",
+    "type": "magento2-module",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Team Magento @basecom",
+            "email": "magento@basecom.de"
+        },
+        {
+            "name": "Finn Reinhardt @basecom",
+            "email": "f.reinhardt@basecom.de"
+        }
+    ],
+    "require": {
+        "php": "~8.1",
+        "magento/framework": "*",
+        "magento/module-config": "*",
+        "hyva-themes/magento2-theme-module": "*",
+        "magento/module-store": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Basecom\\SpeculationRulesToolbox\\": ""
+        }
+    }
+}

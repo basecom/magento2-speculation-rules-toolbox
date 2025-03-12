@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <basecom_performance>
+            <speculation_rules_toolbox>
+                <enabled>0</enabled>
+                <moderate_enabled>0</moderate_enabled>
+                <banned_terms>checkout|auth|redirect|cart|sales|review|download|store|login|logout|productalert|rewrite|search|customer|admin|.pdf|wishlist</banned_terms>
+
+                <all_pages>
+                    <custom_links_enabled>0</custom_links_enabled>
+                    <custom_script_enabled>0</custom_script_enabled>
+                    <custom_script>
+                        <![CDATA[{
+  "prefetch": [
+    {
+      "where": {
+        "selector_matches": "[data-preload=prefetch]"
+      },
+      "eagerness": "immediate"
+    }
+  ]
+}]]>
+                    </custom_script>
+                </all_pages>
+
+                <homepage>
+                    <custom_links_enabled>0</custom_links_enabled>
+                    <dynamic_targets_enabled>0</dynamic_targets_enabled>
+                    <concurrent_preloads>6,2</concurrent_preloads>
+                </homepage>
+
+                <plp>
+                    <custom_links_enabled>0</custom_links_enabled>
+                    <dynamic_targets_enabled>0</dynamic_targets_enabled>
+                    <concurrent_preloads>6,2</concurrent_preloads>
+                </plp>
+
+                <pdp>
+                    <custom_links_enabled>0</custom_links_enabled>
+                    <dynamic_targets_enabled>0</dynamic_targets_enabled>
+                    <concurrent_preloads>6,2</concurrent_preloads>
+                </pdp>
+
+                <dynamic_intersections>
+                    <enabled>0</enabled>
+                    <concurrent_preloads>6,2</concurrent_preloads>
+                    <observer_delay>300</observer_delay>
+                    <observer_threshold>50</observer_threshold>
+                </dynamic_intersections>
+            </speculation_rules_toolbox>
+        </basecom_performance>
+    </default>
+</config>

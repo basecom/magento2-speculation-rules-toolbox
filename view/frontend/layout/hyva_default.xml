@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="head.additional">
+            <block name="speculationrules"
+                   template="Basecom_SpeculationRulesToolbox::js/speculationrules.phtml"
+                   ifconfig="basecom_performance/speculation_rules_toolbox/enabled">
+                <block name="speculationrules.all_pages"
+                       template="Basecom_SpeculationRulesToolbox::js/page/all-pages.phtml">
+                    <block name="speculationrules.all_pages.script"
+                           template="Basecom_SpeculationRulesToolbox::js/page/page-template.phtml"
+                    />
+                </block>
+                <block name="speculationrules.plp"
+                       template="Basecom_SpeculationRulesToolbox::js/page/product-listing-page.phtml">
+                    <block name="speculationrules.plp.script"
+                           template="Basecom_SpeculationRulesToolbox::js/page/page-template.phtml"
+                    />
+                </block>
+                <block name="speculationrules.pdp"
+                       template="Basecom_SpeculationRulesToolbox::js/page/product-detail-page.phtml">
+                    <block name="speculationrules.pdp.script"
+                           template="Basecom_SpeculationRulesToolbox::js/page/page-template.phtml"
+                    />
+                </block>
+                <block name="speculationrules.homepage"
+                       template="Basecom_SpeculationRulesToolbox::js/page/homepage.phtml">
+                    <block name="speculationrules.homepage.script"
+                           template="Basecom_SpeculationRulesToolbox::js/page/page-template.phtml"
+                    />
+                </block>
+                <block name="speculationrules.dynamic_intersections"
+                       template="Basecom_SpeculationRulesToolbox::js/page/dynamic-intersections.phtml"
+                       ifconfig="basecom_performance/speculation_rules_toolbox/dynamic_intersections/enabled"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

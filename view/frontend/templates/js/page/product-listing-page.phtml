@@ -1,0 +1,48 @@
+<?php
+
+declare(strict_types=1);
+
+use Basecom\SpeculationRulesToolbox\Model\Config;
+use Basecom\SpeculationRulesToolbox\ViewModel\SpeculationRules;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var SpeculationRules $speculationRules */
+
+$speculationRules = $viewModels->require(SpeculationRules::class);
+
+// Only render on PLP
+if (!$speculationRules->isProductListingPage()) {
+    return;
+}
+
+/** @var Config $speculationRules */
+$customLinksEnabled = $speculationRules->isPlpCustomLinksEnabled();
+$dynamicTargetsEnabled = $speculationRules->isPlpDynamicTargetsEnabled();
+
+if (!$customLinksEnabled && !$dynamicTargetsEnabled) {
+    // Early return if no relevant settings are enabled
+    return;
+}
+
+$preloadTypeCustom = $speculationRules->getPlpPreloadTypeCustom();
+$customLinksArray = $speculationRules->getPlpCustomLinks();
+$preloadTypeDynamic = $speculationRules->getPlpPreloadTypeDynamic();
+$cssSelector = $speculationRules->getPlpCssSelector();
+$concurrentPreloads = $speculationRules->getPlpConcurrentPreloads();
+?>
+
+<?= /** @noEscape */ $block->getChildBlock('speculationrules.plp.script')
+    ->setData('customLinksEnabled', $customLinksEnabled)
+    ->setData('dynamicTargetsEnabled', $dynamicTargetsEnabled)
+    ->setData('preloadTypeCustom', $preloadTypeCustom)
+    ->setData('customLinksArray', $customLinksArray)
+    ->setData('preloadTypeDynamic', $preloadTypeDynamic)
+    ->setData('cssSelector', $cssSelector)
+    ->setData('concurrentPreloads', $concurrentPreloads)
+    ->toHtml();
+?>

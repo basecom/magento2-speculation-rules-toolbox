@@ -1,0 +1,1043 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!-- Reference basecom tab, in case it does not exist -->
+        <tab id="basecom" sortOrder="100">
+            <label>Basecom</label>
+        </tab>
+
+        <!-- Create new section titled "performance" -->
+        <section id="basecom_performance" sortOrder="100"
+                 showInDefault="1"
+                 showInWebsite="1"
+                 showInStore="1"
+                 canRestore="0"
+        >
+            <label>Performance</label>
+            <tab>basecom</tab>
+            <group id="speculation_rules_toolbox" type="text" sortOrder="10"
+                   showInDefault="1"
+                   showInWebsite="1"
+                   showInStore="1"
+                   canRestore="0"
+            >
+                <label>Speculation Rules Toolbox</label>
+                <comment>
+                    <![CDATA[
+    <style>
+        summary:hover {
+            text-decoration: underline;
+        }
+
+        summary:hover b {
+            text-decoration: inherit;
+        }
+    </style>
+
+    Unleash the full performance potential of your website by utilizing the powerful speculation rules features this module provides.
+    <br>
+    <details>
+        <summary>Click <b>here</b> for an overview of the features</summary>
+        <br>
+        <p>There are five main features you can configure:</p>
+
+        <p><strong>Enable moderate preloading</strong></p>
+        <ul>
+            <li>Adds a script with "moderate" eagerness. This means that links will only be preloaded when the user hovers over them.</li>
+            <li>Updates preloads constantly</li>
+        </ul>
+
+        <p><strong>Enable custom links</strong></p>
+        <ul>
+            <li>Allows for specific links to be preloaded with "immediate" eagerness.</li>
+            <li>Updates preloads once, upon pageload</li>
+        </ul>
+
+        <p><strong>Enable dynamic links</strong></p>
+        <ul>
+            <li>Preload based on a given CSS-selector.</li>
+            <li>Allows preloading of a selected number of URLs within an element (e.g., a container on the product listing page).</li>
+            <li>Also works for selectors that reference anchor elements directly.</li>
+            <li>Updates preloads once, upon pageload</li>
+        </ul>
+
+        <p><strong>Enable custom script</strong></p>
+        <ul>
+            <li>Adds a custom script to the site that can be configured without limitation.</li>
+        </ul>
+
+        <p><strong>Enable dynamic intersections</strong></p>
+        <ul>
+            <li>Adds an observer to the site that dynamically adds new speculation rules when an image enters the view.</li>
+            <li>Updates preloads constantly</li>
+        </ul>
+    </details>
+    <br>
+    For more details about speculation rules in general, please refer to the documentation: <br>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API" target="_blank">MDN Web Docs</a> or
+    <a href="https://developer.chrome.com/docs/web-platform/prerender-pages" target="_blank">Chrome for Developers</a>.
+    <br><br>
+    Created with ❤️ by <br>
+    <a href="https://www.linkedin.com/in/finn-reinhardt/" target="_blank">Finn Reinhardt</a> (Software Developer
+    <a href="https://www.hyva.io/partners#:~:text=basecom%20is%20a%20reliable%20partner%20for%20the%20digital%20transformation." target="_blank">@basecom</a>)
+]]>
+                </comment>
+
+                <field id="enabled" type="select" sortOrder="0"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <label>Enable Speculation Rules</label>
+                    <comment>
+                        <![CDATA[Enable / disable all speculation rules.]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="moderate_enabled" type="select" sortOrder="5"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <label>Enable moderate preloading</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[The "default" option, used for prerendering targets with moderate eagerness. A
+                        preload is initiated after hovering over a target for 200ms. Saves up to two targets at a time.
+                        Based on the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API#concepts_and_usage" target="_blank">given example</a> in the documentation.]]>
+                    </comment>
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="preload_type" type="select"
+                       sortOrder="10"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <label>Preload type</label>
+                    <comment>Preload type used for the moderate preloads.</comment>
+                    <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                    </tooltip>
+                    <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                        <field id="basecom_performance/speculation_rules_toolbox/moderate_enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- General configuration -->
+                <field id="banned_terms" type="textarea"
+                       sortOrder="15"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="1"
+                >
+                    <label>Banned terms</label>
+                    <comment>
+                        <![CDATA[
+                        URLs containing these terms will not be considered for preloading.
+                        ]]>
+                    </comment>
+                    <tooltip>
+                        <![CDATA[
+                        Not all resources are idempotent. Some resources can be unsafe to preload, because they alter the application state. A novel example for this would be the "logout" link, which logs out the current user.
+                        <hr>
+                        Separate multiple entries using a <u><b>pipe as delimiter</b></u>.<br><br>
+                        Syntax: { term_1 }|{ term_2 }|...|{ term_n }<br>
+                        Example: logout|.pdf|customer|checkout
+]]>
+                    </tooltip>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- All Pages -->
+                <group id="all_pages" type="text" sortOrder="20"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <label>All pages</label>
+                    <comment>
+                        <![CDATA[Rules defined in this group will be applied to all pages.]]>
+                    </comment>
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                    </depends>
+
+                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload custom links</label>
+                        <comment>
+                            <![CDATA[Enable / disable preloading of custom links]]>
+                        </comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_custom" type="select" sortOrder="5"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0">
+                        <label>Preload type</label>
+                        <comment>Preload type used for the custom links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="custom_links" type="textarea" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Links</label>
+                        <comment>A list of custom links to be preloaded.</comment>
+                        <tooltip><![CDATA[
+                            Provide a list of links, using a <u><b>semicolon as delimiter</b></u>.
+                            <hr/>
+                            <b>Example (absolute url)</b>:<br><br>
+                            www.example.com;<br>
+                            www.example.com/sale;<br>
+                            www.example.com/new;<br>
+                            www.example.com/about<br>
+                            <br>
+                            <b>Or (relative url)</b>:<br><br>
+                            /;<br>
+                            /sale;<br>
+                            /new;<br>
+                            /about<br>]]>
+                        </tooltip>
+                        <comment>
+                            <![CDATA[Enable / disable preloading of custom links
+
+                             <br>
+                        Syntax:
+                        <br>
+                        Each link should be on its own line. Separate them using a semicolon at the end.</b>
+]]>
+                        </comment>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="custom_script_enabled" type="select" sortOrder="15"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Add custom script</label>
+                        <comment>Enable / disable custom script.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="custom_script" type="editor" sortOrder="20"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Script</label>
+                        <tooltip><![CDATA[
+                            You only need to provide the JSON contents, the according script with the
+                            correct type will be generated.
+
+                            You could e.g. use this to add your own rules for prefetching certain links.
+                            By default, the provided script will prefetch all targets, where the custom data attribute
+                            data-preload="prefetch".
+]]>
+                        </tooltip>
+                        <comment><![CDATA[Enter the JSON contents of your custom speculation rules script. You will need to add banned terms manually,
+                    they are not sourced from the above definition.
+                    ]]></comment>
+                        <depends>
+                            <field id="custom_script_enabled">1</field>
+                        </depends>
+                    </field>
+                </group>
+
+                <!-- Homepage Configuration -->
+                <group id="homepage" type="text" sortOrder="25"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                    </depends>
+                    <label>Homepage</label>
+                    <comment>
+                        <![CDATA[Rules defined in this group will be applied to only the <b>homepage</b>,<br>
+                        identified by the layout handle <i>cms_index_index</i>.]]>
+                    </comment>
+                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload custom links</label>
+                        <comment>Enable / disable preloading of custom links.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_custom" type="select" sortOrder="5"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0">
+                        <label>Preload type</label>
+                        <comment>Preload type used for the custom links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="custom_links" type="textarea" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Links</label>
+                        <comment>A list of custom links to be preloaded.</comment>
+                        <tooltip><![CDATA[
+                            Provide a list of links, using a <u><b>semicolon as delimiter</b></u>.
+                            <hr/>
+                            <b>Example (absolute url)</b>:<br><br>
+                            www.example.com;<br>
+                            www.example.com/sale;<br>
+                            www.example.com/new;<br>
+                            www.example.com/about<br>
+                            <br>
+                            <b>Or (relative url)</b>:<br><br>
+                            /;<br>
+                            /sale;<br>
+                            /new;<br>
+                            /about<br>]]>
+                        </tooltip>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="dynamic_targets_enabled" type="select" sortOrder="15"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload dynamic targets</label>
+                        <comment>Enable / disable preloading of dynamic targets.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_dynamic" type="select" sortOrder="20"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload type</label>
+                        <comment>Preload type used for the dynamic links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="css_selector" type="text" sortOrder="25"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>CSS-Selector</label>
+                        <comment>The CSS-selector used for targeting the elements to be preloaded.</comment>
+                        <tooltip>
+                            <![CDATA[Good to know:<br>You can use <b>any</b> CSS-selector. The underlying code will check, if the matched elements are already a-tags (using document.querySelectorAll().<br><br>If they are not all a-tags,
+                            the element is loaded via document.querySelector() and all of its child a-tags are matched. This is especially useful when you already have e.g. a specific container you would like to target.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="concurrent_preloads" type="text" sortOrder="30"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="1"
+                    >
+                        <label>Concurrent preloads (Desktop, Mobile)</label>
+                        <comment>The maximum amount of concurrent preloads that will be added by dynamic links on
+                            desktop and mobile.
+                        </comment>
+                        <tooltip><![CDATA[
+                            Provide the <u><b>comma separated</b></u> value for the maximum concurrent preloads of
+                            dynamic targets for desktop and mobile. The device type is determined by the user agent.
+                            <hr/>
+                            Syntax: { value desktop },{ value mobile }<br>
+                            Default: 6,2<br><br>
+
+                            This means, that on a desktop device, up to 6 links will be preloaded, whereas on mobile
+                            only two will be preloaded.<br><br>
+
+                            A value of <b>0</b> will deactivate this setting for the respective device type.<br><br>
+
+                            Keep in mind the browser limitations of prerendering and prefetching when setting this value.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
+                        </backend_model>
+                    </field>
+                </group>
+
+                <!-- PLP configuration -->
+                <group id="plp" type="text" sortOrder="30"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                    </depends>
+                    <label>Product Listing Page (PLP) and Search</label>
+                    <comment>
+                        <![CDATA[Rules defined in this group will be applied to only the <b>PLP</b> and <b>Search</b>,<br>
+                        identified by the layout handle <i>catalog_category_view</i> and <i>catalogsearch_result_index</i>.]]>
+                    </comment>
+
+                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload custom links</label>
+                        <comment>Enable / disable preloading of custom links.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_custom" type="select" sortOrder="5"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0">
+                        <label>Preload type</label>
+                        <comment>Preload type used for the custom links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="custom_links" type="textarea" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Links</label>
+                        <comment>A list of custom links to be preloaded.</comment>
+                        <tooltip><![CDATA[
+                            Provide a list of links, using a <u><b>semicolon as delimiter</b></u>.
+                            <hr/>
+                            <b>Example (absolute url)</b>:<br><br>
+                            www.example.com;<br>
+                            www.example.com/sale;<br>
+                            www.example.com/new;<br>
+                            www.example.com/about<br>
+                            <br>
+                            <b>Or (relative url)</b>:<br><br>
+                            /;<br>
+                            /sale;<br>
+                            /new;<br>
+                            /about<br>]]>
+                        </tooltip>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="dynamic_targets_enabled" type="select" sortOrder="15"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload dynamic targets</label>
+                        <comment>Enable / disable preloading of dynamic targets.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_dynamic" type="select" sortOrder="20"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload type</label>
+                        <comment>Preload type used for the dynamic links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="css_selector" type="text" sortOrder="25"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>CSS-Selector</label>
+                        <comment>The CSS-selector used for targeting the elements to be preloaded.</comment>
+                        <tooltip>
+                            <![CDATA[Good to know:<br>You can use <b>any</b> CSS-selector. The underlying code will check, if the matched elements are already a-tags (using document.querySelectorAll().<br><br>If they are not all a-tags,
+                            the element is loaded via document.querySelector() and all of its child a-tags are matched. This is especially useful when you have already e.g. a specific container you would like to target.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="concurrent_preloads" type="text" sortOrder="30"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="1"
+                    >
+                        <label>Concurrent preloads (Desktop, Mobile)</label>
+                        <comment>The maximum amount of concurrent preloads that will be added by dynamic links on
+                            desktop and mobile.
+                        </comment>
+                        <tooltip><![CDATA[
+                            Provide the <u><b>comma separated</b></u> value for the maximum concurrent preloads of
+                            dynamic targets for desktop and mobile. The device type is determined by the user agent.
+                            <hr/>
+                            Syntax: { value desktop },{ value mobile }<br>
+                            Default: 6,2<br><br>
+
+                            This means, that on a desktop device, up to 6 links will be preloaded, whereas on mobile
+                            only two will be preloaded.<br><br>
+
+                            A value of <b>0</b> will deactivate this setting for the respective device type.<br><br>
+
+                            Keep in mind the browser limitations of prerendering and prefetching when setting this value.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
+                        </backend_model>
+                    </field>
+                </group>
+
+                <!-- PDP Configuration -->
+                <group id="pdp" type="text" sortOrder="35"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                    </depends>
+                    <label>Product Detail Page (PDP)</label>
+                    <comment>
+                        <![CDATA[Rules defined in this group will be applied to only the <b>PDP</b>,<br>
+                        identified by the layout handle <i>catalog_product_view</i>.]]>
+                    </comment>
+
+                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload custom links</label>
+                        <comment>Enable / disable preloading of custom links.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_custom" type="select" sortOrder="5"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0">
+                        <label>Preload type</label>
+                        <comment>Preload type used for the custom links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="custom_links" type="textarea" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Links</label>
+                        <comment>A list of custom links to be preloaded.</comment>
+                        <tooltip><![CDATA[
+                            Provide a list of links, using a <u><b>semicolon as delimiter</b></u>.
+                            <hr/>
+                            <b>Example (absolute url)</b>:<br><br>
+                            www.example.com;<br>
+                            www.example.com/sale;<br>
+                            www.example.com/new;<br>
+                            www.example.com/about<br>
+                            <br>
+                            <b>Or (relative url)</b>:<br><br>
+                            /;<br>
+                            /sale;<br>
+                            /new;<br>
+                            /about<br>]]>
+                        </tooltip>
+                        <depends>
+                            <field id="custom_links_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="dynamic_targets_enabled" type="select" sortOrder="15"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload dynamic targets</label>
+                        <comment>Enable / disable preloading of dynamic targets.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="preload_type_dynamic" type="select" sortOrder="20"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload type</label>
+                        <comment>Preload type used for the dynamic links.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="css_selector" type="text" sortOrder="25"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>CSS-Selector</label>
+                        <comment>The CSS-selector used for targeting the elements to be preloaded.</comment>
+                        <tooltip>
+                            <![CDATA[Good to know:<br>You can use <b>any</b> CSS-selector. The underlying code will check, if the matched elements are already a-tags (using document.querySelectorAll().<br><br>If they are not all a-tags,
+                            the element is loaded via document.querySelector() and all of its child a-tags are matched. This is especially useful when you already have e.g. a specific container you would like to target.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="concurrent_preloads" type="text" sortOrder="30"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="1"
+                    >
+                        <label>Concurrent preloads (Desktop, Mobile)</label>
+                        <comment>The maximum amount of concurrent preloads that will be added by dynamic links on
+                            desktop and mobile.
+                        </comment>
+                        <tooltip><![CDATA[
+                            Provide the <u><b>comma separated</b></u> value for the maximum concurrent preloads of
+                            dynamic targets for desktop and mobile. The device type is determined by the user agent.
+                            <hr/>
+                            Syntax: { value desktop },{ value mobile }<br>
+                            Default: 6,2<br><br>
+
+                            This means, that on a desktop device, up to 6 links will be preloaded, whereas on mobile
+                            only two will be preloaded.<br><br>
+
+                            A value of <b>0</b> will deactivate this setting for the respective device type.<br><br>
+
+                            Keep in mind the browser limitations of prerendering and prefetching when setting this value.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="dynamic_targets_enabled">1</field>
+                        </depends>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
+                        </backend_model>
+                    </field>
+                </group>
+
+                <!-- Dynamic Intersections Configuration -->
+                <group id="dynamic_intersections" type="text" sortOrder="35"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1"
+                       canRestore="0"
+                >
+                    <depends>
+                        <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
+                    </depends>
+                    <label>Dynamic Intersections</label>
+                    <comment>
+                        <![CDATA[If enabled, adds a script that observes when an image enters the view.<br>
+                        Can be selectively enabled for the above-mentioned areas.
+]]>
+                    </comment>
+
+                    <field id="enabled" type="select" sortOrder="0"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Enable</label>
+                        <comment>Enable / disable dynamic intersection based speculation rules.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+
+                    <field id="preload_type" type="select" sortOrder="5"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Preload type</label>
+                        <comment>Preload type used for the dynamic intersection.</comment>
+                        <tooltip><![CDATA[
+                            <b>Prefetch</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li>Will <b>not</b> download any of the referenced subresources</li>
+                            <li>Will <b>not</b> execute any JavaScript</li>
+                            </ul>
+                            Max. concurrent prefetches:<br>
+                            Immediate / Eager = <b>50</b><br>
+                            Moderate = <b>2</b>
+
+                            <hr/>
+
+                            <b>Prerender</b>:<br>
+                            <ul>
+                            <li>Will download the response body of the referenced page</li>
+                            <li><b>Will</b> download all of the referenced subresources, even from fetches made via JavaScript
+                            <li><b>Will</b> execute all JavaScript
+                            </ul>
+
+                            Max. concurrent prerenders:<br>
+                            Immediate / Eager = <b>10</b><br>
+                            Moderate = <b>2</b>]]>
+                        </tooltip>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\PreloadType</source_model>
+                        <depends>
+                            <field id="enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="concurrent_preloads" type="text" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="1"
+                    >
+                        <label>Concurrent preloads (Desktop, Mobile)</label>
+                        <comment>The maximum amount of concurrent preloads that will be added by dynamic intersections
+                            on desktop and mobile.
+                        </comment>
+                        <tooltip><![CDATA[
+                            Provide the <u><b>comma separated</b></u> value for the maximum concurrent preloads of
+                            dynamic targets for desktop and mobile. The device type is determined by the user agent.
+                            <hr/>
+                            Syntax: { value desktop },{ value mobile }<br>
+                            Default: 6,2<br><br>
+
+                            This means, that on a desktop device, up to 6 links will be preloaded, whereas on mobile
+                            only two will be preloaded.<br><br>
+
+                            A value of <b>0</b> will deactivate this setting for the respective device type.<br><br>
+
+                            Keep in mind the browser limitations of prerendering and prefetching when setting this value.]]>
+                        </tooltip>
+                        <depends>
+                            <field id="enabled">1</field>
+                        </depends>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
+                        </backend_model>
+                    </field>
+
+                    <field id="observer_delay" type="text" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="1"
+                    >
+                        <label>Observer delay (ms)</label>
+                        <validate>validate-number validate-greater-than-zero</validate>
+                        <comment>The time in milliseconds an image needs to be in view in order to trigger preloading of
+                            the target.
+                        </comment>
+                        <depends>
+                            <field id="enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="observer_threshold" type="text" sortOrder="10"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="1"
+                    >
+                        <label>Observer Threshold</label>
+                        <comment>
+                            <![CDATA[The percentage by which an image needs to be visible in the viewport before the observer fires an event.
+                            Enter a value between <b>0</b> and <b>100</b>.]]>
+                        </comment>
+                        <validate>validate-number</validate>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ObserverThreshold
+                        </backend_model>
+                        <depends>
+                            <field id="enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="apply_to_pages" type="multiselect" sortOrder="15"
+                           showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1"
+                           canRestore="0"
+                    >
+                        <label>Apply to pages</label>
+                        <comment>The scopes in which the dynamic intersections will be active.</comment>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\ApplicationScopes
+                        </source_model>
+                        <depends>
+                            <field id="enabled">1</field>
+                        </depends>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>
