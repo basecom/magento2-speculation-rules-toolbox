@@ -16,6 +16,7 @@
         >
             <label>Performance</label>
             <tab>basecom</tab>
+            <resource>Basecom_SpeculationRulesToolbox::config</resource>
             <group id="speculation_rules_toolbox" translate="label" type="text" sortOrder="10"
                    showInDefault="1"
                    showInWebsite="1"
@@ -165,7 +166,7 @@
                     <label>Banned terms</label>
                     <comment>
                         <![CDATA[
-                        URLs containing these terms will not be considered for preloading.
+                        URLs containing these terms will not be considered for preloading. Applies to all subsequent preloads, except for rules defined in your own custom script.
                         ]]>
                     </comment>
                     <tooltip>
@@ -659,7 +660,7 @@
                         <comment>The CSS-selector used for targeting the elements to be preloaded.</comment>
                         <tooltip>
                             <![CDATA[Good to know:<br>You can use <b>any</b> CSS-selector. The underlying code will check, if the matched elements are already a-tags (using document.querySelectorAll().<br><br>If they are not all a-tags,
-                            the element is loaded via document.querySelector() and all of its child a-tags are matched. This is especially useful when you have already e.g. a specific container you would like to target.]]>
+                            the element is loaded via document.querySelector() and all of its child a-tags are matched. This is especially useful when you already have e.g. a specific container you would like to target.]]>
                         </tooltip>
                         <depends>
                             <field id="dynamic_targets_enabled">1</field>
