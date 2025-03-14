@@ -3,12 +3,12 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <!-- Reference basecom tab, in case it does not exist -->
-        <tab id="basecom" sortOrder="100">
+        <tab id="basecom" translate="label" sortOrder="100">
             <label>Basecom</label>
         </tab>
 
         <!-- Create new section titled "performance" -->
-        <section id="basecom_performance" sortOrder="100"
+        <section id="basecom_performance" translate="label" sortOrder="100"
                  showInDefault="1"
                  showInWebsite="1"
                  showInStore="1"
@@ -16,7 +16,7 @@
         >
             <label>Performance</label>
             <tab>basecom</tab>
-            <group id="speculation_rules_toolbox" type="text" sortOrder="10"
+            <group id="speculation_rules_toolbox" translate="label" type="text" sortOrder="10"
                    showInDefault="1"
                    showInWebsite="1"
                    showInStore="1"
@@ -84,7 +84,7 @@
 ]]>
                 </comment>
 
-                <field id="enabled" type="select" sortOrder="0"
+                <field id="enabled" translate="label" type="select" sortOrder="0"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -97,7 +97,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="moderate_enabled" type="select" sortOrder="5"
+                <field id="moderate_enabled" translate="label" type="select" sortOrder="5"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -114,7 +114,7 @@
                     </depends>
                 </field>
 
-                <field id="preload_type" type="select"
+                <field id="preload_type" translate="label" type="select"
                        sortOrder="10"
                        showInDefault="1"
                        showInWebsite="1"
@@ -155,7 +155,7 @@
                 </field>
 
                 <!-- General configuration -->
-                <field id="banned_terms" type="textarea"
+                <field id="banned_terms" translate="label" type="textarea"
                        sortOrder="15"
                        showInDefault="1"
                        showInWebsite="1"
@@ -183,7 +183,7 @@
                 </field>
 
                 <!-- All Pages -->
-                <group id="all_pages" type="text" sortOrder="20"
+                <group id="all_pages" translate="label" type="text" sortOrder="20"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -197,7 +197,7 @@
                         <field id="basecom_performance/speculation_rules_toolbox/enabled">1</field>
                     </depends>
 
-                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                    <field id="custom_links_enabled" translate="label" type="select" sortOrder="0"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -210,7 +210,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_custom" type="select" sortOrder="5"
+                    <field id="preload_type_custom" translate="label" type="select" sortOrder="5"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -247,7 +247,7 @@
                         </depends>
                     </field>
 
-                    <field id="custom_links" type="textarea" sortOrder="10"
+                    <field id="custom_links" translate="label" type="textarea" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -284,7 +284,7 @@
                         </depends>
                     </field>
 
-                    <field id="custom_script_enabled" type="select" sortOrder="15"
+                    <field id="custom_script_enabled" translate="label" type="select" sortOrder="15"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -295,7 +295,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="custom_script" type="editor" sortOrder="20"
+                    <field id="custom_script" translate="label" type="editor" sortOrder="20"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -321,7 +321,7 @@
                 </group>
 
                 <!-- Homepage Configuration -->
-                <group id="homepage" type="text" sortOrder="25"
+                <group id="homepage" translate="label" type="text" sortOrder="25"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -335,7 +335,7 @@
                         <![CDATA[Rules defined in this group will be applied to only the <b>homepage</b>,<br>
                         identified by the layout handle <i>cms_index_index</i>.]]>
                     </comment>
-                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                    <field id="custom_links_enabled" translate="label" type="select" sortOrder="0"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -346,7 +346,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_custom" type="select" sortOrder="5"
+                    <field id="preload_type_custom" translate="label" type="select" sortOrder="5"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -383,7 +383,7 @@
                         </depends>
                     </field>
 
-                    <field id="custom_links" type="textarea" sortOrder="10"
+                    <field id="custom_links" translate="label" type="textarea" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -411,7 +411,7 @@
                         </depends>
                     </field>
 
-                    <field id="dynamic_targets_enabled" type="select" sortOrder="15"
+                    <field id="dynamic_targets_enabled" translate="label" type="select" sortOrder="15"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -422,7 +422,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_dynamic" type="select" sortOrder="20"
+                    <field id="preload_type_dynamic" translate="label" type="select" sortOrder="20"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -460,7 +460,7 @@
                         </depends>
                     </field>
 
-                    <field id="css_selector" type="text" sortOrder="25"
+                    <field id="css_selector" translate="label" type="text" sortOrder="25"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -477,7 +477,7 @@
                         </depends>
                     </field>
 
-                    <field id="concurrent_preloads" type="text" sortOrder="30"
+                    <field id="concurrent_preloads" translate="label" type="text" sortOrder="30"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -504,13 +504,12 @@
                         <depends>
                             <field id="dynamic_targets_enabled">1</field>
                         </depends>
-                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
-                        </backend_model>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads</backend_model>
                     </field>
                 </group>
 
                 <!-- PLP configuration -->
-                <group id="plp" type="text" sortOrder="30"
+                <group id="plp" translate="label" type="text" sortOrder="30"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -525,7 +524,7 @@
                         identified by the layout handle <i>catalog_category_view</i> and <i>catalogsearch_result_index</i>.]]>
                     </comment>
 
-                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                    <field id="custom_links_enabled" translate="label" type="select" sortOrder="0"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -536,7 +535,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_custom" type="select" sortOrder="5"
+                    <field id="preload_type_custom" translate="label" type="select" sortOrder="5"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -573,7 +572,7 @@
                         </depends>
                     </field>
 
-                    <field id="custom_links" type="textarea" sortOrder="10"
+                    <field id="custom_links" translate="label" type="textarea" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -601,7 +600,7 @@
                         </depends>
                     </field>
 
-                    <field id="dynamic_targets_enabled" type="select" sortOrder="15"
+                    <field id="dynamic_targets_enabled" translate="label" type="select" sortOrder="15"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -612,7 +611,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_dynamic" type="select" sortOrder="20"
+                    <field id="preload_type_dynamic" translate="label" type="select" sortOrder="20"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -650,7 +649,7 @@
                         </depends>
                     </field>
 
-                    <field id="css_selector" type="text" sortOrder="25"
+                    <field id="css_selector" translate="label" type="text" sortOrder="25"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -667,7 +666,7 @@
                         </depends>
                     </field>
 
-                    <field id="concurrent_preloads" type="text" sortOrder="30"
+                    <field id="concurrent_preloads" translate="label" type="text" sortOrder="30"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -694,13 +693,12 @@
                         <depends>
                             <field id="dynamic_targets_enabled">1</field>
                         </depends>
-                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
-                        </backend_model>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads</backend_model>
                     </field>
                 </group>
 
                 <!-- PDP Configuration -->
-                <group id="pdp" type="text" sortOrder="35"
+                <group id="pdp" translate="label" type="text" sortOrder="35"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -715,7 +713,7 @@
                         identified by the layout handle <i>catalog_product_view</i>.]]>
                     </comment>
 
-                    <field id="custom_links_enabled" type="select" sortOrder="0"
+                    <field id="custom_links_enabled" translate="label" type="select" sortOrder="0"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -726,7 +724,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_custom" type="select" sortOrder="5"
+                    <field id="preload_type_custom" translate="label" type="select" sortOrder="5"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -763,7 +761,7 @@
                         </depends>
                     </field>
 
-                    <field id="custom_links" type="textarea" sortOrder="10"
+                    <field id="custom_links" translate="label" type="textarea" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -791,7 +789,7 @@
                         </depends>
                     </field>
 
-                    <field id="dynamic_targets_enabled" type="select" sortOrder="15"
+                    <field id="dynamic_targets_enabled" translate="label" type="select" sortOrder="15"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -802,7 +800,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
 
-                    <field id="preload_type_dynamic" type="select" sortOrder="20"
+                    <field id="preload_type_dynamic" translate="label" type="select" sortOrder="20"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -840,7 +838,7 @@
                         </depends>
                     </field>
 
-                    <field id="css_selector" type="text" sortOrder="25"
+                    <field id="css_selector" translate="label" type="text" sortOrder="25"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -857,7 +855,7 @@
                         </depends>
                     </field>
 
-                    <field id="concurrent_preloads" type="text" sortOrder="30"
+                    <field id="concurrent_preloads" translate="label" type="text" sortOrder="30"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -884,13 +882,12 @@
                         <depends>
                             <field id="dynamic_targets_enabled">1</field>
                         </depends>
-                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
-                        </backend_model>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads</backend_model>
                     </field>
                 </group>
 
                 <!-- Dynamic Intersections Configuration -->
-                <group id="dynamic_intersections" type="text" sortOrder="35"
+                <group id="dynamic_intersections" translate="label" type="text" sortOrder="35"
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1"
@@ -906,7 +903,7 @@
 ]]>
                     </comment>
 
-                    <field id="enabled" type="select" sortOrder="0"
+                    <field id="enabled" translate="label" type="select" sortOrder="0"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -918,7 +915,7 @@
                     </field>
 
 
-                    <field id="preload_type" type="select" sortOrder="5"
+                    <field id="preload_type" translate="label" type="select" sortOrder="5"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -956,7 +953,7 @@
                         </depends>
                     </field>
 
-                    <field id="concurrent_preloads" type="text" sortOrder="10"
+                    <field id="concurrent_preloads" translate="label" type="text" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -983,11 +980,10 @@
                         <depends>
                             <field id="enabled">1</field>
                         </depends>
-                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads
-                        </backend_model>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ConcurrentPreloads</backend_model>
                     </field>
 
-                    <field id="observer_delay" type="text" sortOrder="10"
+                    <field id="observer_delay" translate="label" type="text" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -1003,7 +999,7 @@
                         </depends>
                     </field>
 
-                    <field id="observer_threshold" type="text" sortOrder="10"
+                    <field id="observer_threshold" translate="label" type="text" sortOrder="10"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -1015,14 +1011,13 @@
                             Enter a value between <b>0</b> and <b>100</b>.]]>
                         </comment>
                         <validate>validate-number</validate>
-                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ObserverThreshold
-                        </backend_model>
+                        <backend_model>Basecom\SpeculationRulesToolbox\Model\Config\Backend\ObserverThreshold</backend_model>
                         <depends>
                             <field id="enabled">1</field>
                         </depends>
                     </field>
 
-                    <field id="apply_to_pages" type="multiselect" sortOrder="15"
+                    <field id="apply_to_pages" translate="label" type="multiselect" sortOrder="15"
                            showInDefault="1"
                            showInWebsite="1"
                            showInStore="1"
@@ -1030,8 +1025,7 @@
                     >
                         <label>Apply to pages</label>
                         <comment>The scopes in which the dynamic intersections will be active.</comment>
-                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\ApplicationScopes
-                        </source_model>
+                        <source_model>Basecom\SpeculationRulesToolbox\Model\Config\Source\ApplicationScopes</source_model>
                         <depends>
                             <field id="enabled">1</field>
                         </depends>
