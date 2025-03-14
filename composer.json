@@ -1,6 +1,6 @@
 {
     "name": "basecom/magento2-speculation-rules-toolbox",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "description": "Magento2 module to provide extensive functionality for speculation rules",
     "type": "magento2-module",
     "license": [
