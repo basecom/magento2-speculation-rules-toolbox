@@ -162,7 +162,8 @@ $preloadType = $speculationRules->getSpeculationRulesPreloadType();
                         "where": {
                             "and": [
                                 {"href_matches": "/*"},
-                                {"not": {"href_matches": ".*(" + SpeculationRules.bannedTerms + ").*"}},
+                                {"not": {"href_matches": "*/(" + SpeculationRules.bannedTerms + ")/*"}},
+                                {"not": {"href_matches": "/*(" + SpeculationRules.bannedTerms + ")/*"}},
                                 {"not": {"href_matches": "/*\\?*(^|&)add-to-cart=*"}},
                                 {"not": {"selector_matches": ".no-prerender"}},
                                 {"not": {"selector_matches": ".do-not-prerender"}},
